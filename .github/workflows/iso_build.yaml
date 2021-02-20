@@ -46,13 +46,6 @@ jobs:
         uses: styfle/cancel-workflow-action@0.8.0
         with:
           access_token: ${{ github.token }}
-      - 
-        name: checkout
-        uses: actions/checkout@v2
-        with:
-          repository: manjaro-plasma/iso-profiles
-          token: "${{ secrets.GITHUB_TOKEN }}"
-          path: 'iso-profiles'      
       -
         name: install-build-dependencies
         run: |
@@ -151,6 +144,10 @@ jobs:
           }
           
           install_mjr_tools
+      -
+        name: checkout-iso-profiles
+        run: |          
+          sudo git clone https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
       -
         name: build
         env:
