@@ -1,4 +1,4 @@
-# Manjaro Plasma Editions
+# Manjaro Editions
 [![iso_build](https://github.com/manjaro/release-review/workflows/iso_build/badge.svg)](https://github.com/manjaro/release-review/actions)
 
 ## description
