@@ -2,7 +2,7 @@ name: iso_build
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '15 9 * * *'
+    - cron:  '30 6 1 * *'
 
 jobs:
   prepare_release:
