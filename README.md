@@ -7,7 +7,7 @@ Release-Review ISOs of Manjaro Linux
 
 ## where can I download an iso?
 
-Images are build and uploaded in a relatively regular interval to [github releases](https://github.com/manjaro/release-review/releases)
+Images are built and uploaded in a relatively regular interval to [github releases](https://github.com/manjaro/release-review/releases)
 
 ## sources
 
