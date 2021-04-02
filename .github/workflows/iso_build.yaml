@@ -173,6 +173,8 @@ jobs:
              
           sudo buildiso ${SCOPE:+-f} -p $EDITION -b $BRANCH -k $KERNEL
           
+          sudo rm -Rf /var/lib/manjaro-tools/buildiso/*
+          
           FILE_PATH=$(find /var/cache/manjaro-tools/iso -type f -name "*.iso" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           zip -j -s 1950m $(basename $FILE_PATH).zip $FILE_PATH
           ls -lasih .
