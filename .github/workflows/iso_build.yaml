@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####      
-        EDITION: [gnome]
+        EDITION: [gnome, xfce, kde]
         BRANCH: [stable-staging]
         SCOPE: [minimal,full]
         ###################
