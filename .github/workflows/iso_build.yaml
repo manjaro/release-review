@@ -164,6 +164,12 @@ jobs:
           sudo sed -i -e "s|build_mirror='https://manjaro.moson.eu'|build_mirror='https://mirror.easyname.at/manjaro'|g" /usr/lib/manjaro-tools/util.sh
           sudo sed -i -e "s|dist_release=\$(get_release)|dist_release=$VERSION|g" /usr/lib/manjaro-tools/util.sh
           sudo sed -i -e "s|dist_codename=\$(get_codename)|dist_codename=\"$CODE_NAME\"|g" /usr/lib/manjaro-tools/util.sh
+          
+          if [ $EDITION == "gnome" ]; then
+          cd iso-profiles
+          sudo git checkout 21.0.x
+          cd ..
+          fi
              
           sudo buildiso ${SCOPE:+-f} -p $EDITION -b $BRANCH -k $KERNEL
           
