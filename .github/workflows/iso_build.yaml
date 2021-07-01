@@ -8,7 +8,7 @@ jobs:
   prepare_release:
     runs-on: ubuntu-20.04
     steps:
-      - uses: styfle/cancel-workflow-action@0.8.0
+      - uses: styfle/cancel-workflow-action@0.9.0
         with:
           access_token: ${{ github.token }}
       - id: time
@@ -28,7 +28,7 @@ jobs:
         SCOPE: [minimal,full]
         ###################
     steps:
-      - uses: styfle/cancel-workflow-action@0.8.0
+      - uses: styfle/cancel-workflow-action@0.9.0
         with:
           access_token: ${{ github.token }}
       - id: image-build
