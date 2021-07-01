@@ -84,14 +84,14 @@ jobs:
           asset_name: ${{ steps.image-build.outputs.file-path }}.z01
           asset_content_type: application/zip
       - 
-        id: upload_sha1
+        id: upload_sha256
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.prepare_release.outputs.upload_url }}
-          asset_path: ./${{ steps.image-build.outputs.file-sha1 }}
-          asset_name: ${{ steps.image-build.outputs.file-sha1 }}
+          asset_path: ./${{ steps.image-build.outputs.file-sha256 }}
+          asset_name: ${{ steps.image-build.outputs.file-sha256 }}
           asset_content_type: text/plain
       - 
         id: upload_pkg
