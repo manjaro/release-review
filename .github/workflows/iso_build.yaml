@@ -19,7 +19,7 @@ jobs:
       release_tag: ${{ steps.time.outputs.time }}      
   release:
     runs-on: ubuntu-20.04
-    needs: prepare_release    
+    needs: prepare-release    
     strategy:
       matrix:
         ##### EDIT ME #####      
