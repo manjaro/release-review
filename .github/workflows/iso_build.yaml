@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####      
-        EDITION: [cinnamon] #[gnome, xfce, kde]
-        BRANCH: [stable-staging]
+        EDITION: [gnome, xfce, kde]
+        BRANCH: [stable]
         SCOPE: [minimal,full]
         ###################
     steps:
@@ -37,9 +37,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "21.0"
-          kernel: linux510
-          code-name: "Ornara"
+          version: "21.1"
+          kernel: linux513
+          code-name: "Pahvo"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
