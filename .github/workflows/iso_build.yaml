@@ -34,7 +34,6 @@ jobs:
       - id: image-build
         uses: manjaro/manjaro-iso-action@v2.1
         with:
-          iso-profiles-repo: https://github.com/Manjaro-Sway/iso-profiles
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
