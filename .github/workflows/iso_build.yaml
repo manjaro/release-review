@@ -32,7 +32,7 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - id: image-build
-        uses: manjaro/manjaro-iso-action@main
+        uses: manjaro/manjaro-iso-action@v1
         with:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
