@@ -38,7 +38,7 @@ jobs:
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
           version: "21.1"
-          kernel: linux512
+          kernel: linux513
           code-name: "Pahvo"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
