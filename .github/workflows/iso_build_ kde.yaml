@@ -1,0 +1,49 @@
+name: iso_build
+on:
+  workflow_dispatch:
+#  schedule:
+#    - cron:  '30 6 1 * *'
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+      - id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: 'YYYYMMDDHHmm'
+    outputs:
+      release_tag: ${{ steps.time.outputs.time }}      
+  release:
+    runs-on: ubuntu-20.04
+    needs: prepare-release    
+    strategy:
+      matrix:
+        ##### EDIT ME #####      
+        EDITION: [kde]
+        BRANCH: [testing]
+        SCOPE: [minimal,full]
+        ###################
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+      - id: image-build
+        uses: manjaro/manjaro-iso-action@v2.1
+        with:
+          edition: ${{ matrix.edition }}
+          branch: ${{ matrix.branch }}
+          scope: ${{ matrix.scope }}
+          version: "21.2"
+          kernel: linux515
+          code-name: "Qonos"
+          release-tag: ${{ needs.prepare-release.outputs.release_tag }}
+      - name: rollback
+        if: ${{ failure() || cancelled() }}
+        run: |
+          echo ${{ github.token }} | gh auth login --with-token
+          gh release delete ${{ needs.prepare-release.outputs.release_tag }} -y --repo ${{ github.repository }}
+          git push --delete origin ${{ needs.prepare-release.outputs.release_tag }}
