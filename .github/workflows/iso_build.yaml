@@ -24,7 +24,7 @@ jobs:
       matrix:
         ##### EDIT ME #####      
         EDITION: [gnome, xfce, kde]
-        BRANCH: [stable-staging]
+        BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
     steps:
@@ -37,9 +37,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "21.1"
-          kernel: linux513
-          code-name: "Pahvo"
+          version: "21.2"
+          kernel: linux515
+          code-name: "Qonos"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
