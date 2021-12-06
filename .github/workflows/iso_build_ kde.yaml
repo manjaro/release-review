@@ -1,4 +1,4 @@
-name: iso_build
+name: iso_build_kde
 on:
   workflow_dispatch:
 #  schedule:
