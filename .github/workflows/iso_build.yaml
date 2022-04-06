@@ -22,8 +22,9 @@ jobs:
     needs: prepare-release    
     strategy:
       matrix:
-        ##### EDIT ME #####      
-        EDITION: [gnome, xfce, kde]
+        ##### EDIT ME #####
+#        EDITION: [gnome, xfce, kde]
+        EDITION: [kde]
         BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
