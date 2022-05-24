@@ -25,7 +25,7 @@ jobs:
         ##### EDIT ME #####
         EDITION: [gnome, xfce, kde]
 #        EDITION: [kde]
-        BRANCH: [testing]
+        BRANCH: [stable]
         SCOPE: [minimal,full]
         ###################
     steps:
