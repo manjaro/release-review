@@ -8,11 +8,11 @@ jobs:
   prepare-release:
     runs-on: ubuntu-20.04
     steps:
-      - uses: styfle/cancel-workflow-action@0.11.0
+      - uses: styfle/cancel-workflow-action@b173b6ec0100793626c2d9e6b90435061f4fc3e5 # tag=0.11.0
         with:
           access_token: ${{ github.token }}
       - id: time
-        uses: nanzm/get-time-action@v1.1
+        uses: nanzm/get-time-action@5fb6a88787f272aeb246a10ebb8fabeb5f3c7b9c # tag=v1.1
         with:
           format: 'YYYYMMDDHHmm'
     outputs:
@@ -29,11 +29,11 @@ jobs:
         SCOPE: [minimal,full]
         ###################
     steps:
-      - uses: styfle/cancel-workflow-action@0.11.0
+      - uses: styfle/cancel-workflow-action@b173b6ec0100793626c2d9e6b90435061f4fc3e5 # tag=0.11.0
         with:
           access_token: ${{ github.token }}
       - id: image-build
-        uses: manjaro/manjaro-iso-action@v2.6
+        uses: manjaro/manjaro-iso-action@b97429ff3a634b07e9aa7c8688eea2fe94e2f550 # tag=v2.6
         with:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
