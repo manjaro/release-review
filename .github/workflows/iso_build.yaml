@@ -39,7 +39,7 @@ jobs:
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
           version: "22.0"
-          kernel: linux519
+          kernel: linux60
           code-name: "Sikaris"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
