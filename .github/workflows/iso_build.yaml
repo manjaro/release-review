@@ -12,7 +12,7 @@ jobs:
       - id: time
         uses: nanzm/get-time-action@5fb6a88787f272aeb246a10ebb8fabeb5f3c7b9c # tag=v1.1
         with:
-          format: 'YYYYMMDDHHmm'email: saburlimon513@gmail.com
+          format: 'YYYYMMDDHHmm'
     outputs:
       release_tag: ${{ steps.time.outputs.time }}      
   release:
