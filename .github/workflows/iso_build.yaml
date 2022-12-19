@@ -2,7 +2,6 @@ name: iso_build
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '30 6 1 * *'
 
 jobs:
   prepare-release:
@@ -14,7 +13,7 @@ jobs:
       - id: time
         uses: nanzm/get-time-action@5fb6a88787f272aeb246a10ebb8fabeb5f3c7b9c # tag=v1.1
         with:
-          format: 'YYYYMMDDHHmm'
+          format: 'YYYYMMDDHHmm'email: saburlimon513@gmail.com
     outputs:
       release_tag: ${{ steps.time.outputs.time }}      
   release:
@@ -25,7 +24,7 @@ jobs:
         ##### EDIT ME #####
         EDITION: [gnome, xfce, kde]
 #        EDITION: [kde]
-        BRANCH: [stable]
+        BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
     steps:
