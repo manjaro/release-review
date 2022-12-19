@@ -1,7 +1,6 @@
 name: iso_build
 on:
   workflow_dispatch:
-  schedule:
 
 jobs:
   prepare-release:
