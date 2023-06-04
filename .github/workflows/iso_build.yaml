@@ -38,9 +38,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "22.0"
-          kernel: linux61
-          code-name: "Sikaris"
+          version: "23.0"
+          kernel: linux63
+          code-name: "Ultima Thule"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
