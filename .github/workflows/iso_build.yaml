@@ -39,8 +39,8 @@ jobs:
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
           version: "23.0"
-          kernel: linux63
-          code-name: "Ultima Thule"
+          kernel: linux64
+          code-name: "Uranos"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
