@@ -39,7 +39,7 @@ jobs:
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
           version: "23.0"
-          kernel: linux64
+          kernel: linux65
           code-name: "Uranos"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
