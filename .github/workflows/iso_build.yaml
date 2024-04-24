@@ -23,9 +23,8 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
-        EDITION: [gnome, xfce, kde]
-#        EDITION: [kde]
-        BRANCH: [stable]
+        EDITION: [gnome-next, xfce, kde-dev]
+        BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
     steps:
@@ -38,9 +37,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "23.1"
-          kernel: linux66
-          code-name: "Vulcan"
+          version: "24.0"
+          kernel: linux68
+          code-name: "Wynsdey"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
