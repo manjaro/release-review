@@ -1,0 +1,20 @@
+{
+  "name": "release",
+  "version": "1.0.0",
+  "author": {
+    "email": "info@jonas-strassel.de",
+    "name": "Jonas Strassel",
+    "url": "https://jonas-strassel.de"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "echo nothing to build"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20221111.1",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "zod": "^3.23.4"
+  }
+}
