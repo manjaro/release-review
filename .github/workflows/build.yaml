@@ -1,0 +1,149 @@
+name: build
+on:
+  schedule:
+    - cron:  '30 2 * * 0'
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+    - iso_profile_update
+    - image_profile_update
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+env:
+  MATRIX_ROOM_ID: "!XXstZzLEcUVKyTcqCA:matrix.org"
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - id: time
+        uses: boredland/get-time-action@dbc808befb89eb33fee64f5f4abce4d2a5fa7cfd # tag=2.0.0
+        with:
+          format: 'YYYYMMDDHHmm'
+      - id: receive
+        uses: boredland/kernel-info@main
+    outputs:
+      release_tag: ${{ steps.time.outputs.time }}
+      longterm: ${{ steps.receive.outputs.longterm-pkg }}
+      stable: ${{ steps.receive.outputs.stable-pkg }}
+  build-image:
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: write
+    needs: [prepare-release]
+    # we need to continue on error for the experimental builds
+    continue-on-error: ${{ matrix.experimental }}
+    name: arm ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.device }}
+    strategy:
+      matrix:
+        edition: [minimal, xfce, gnome, kde-plasma]
+        branch: [stable, testing, unstable]
+        device: [rpi4]
+        include:
+          # we assume all builds are experimental, as arm is in a bad shape overall
+          - experimental: true
+    steps:
+      - name: arm build
+        uses: manjaro-contrib/action-buildarmimg@main
+        with:
+          device: ${{ matrix.device }}
+          edition: ${{ matrix.edition }}
+          branch: ${{ matrix.branch }}
+          release-tag: ${{ needs.prepare-release.outputs.release_tag }}
+          arm-profiles-repo: https://gitlab.manjaro.org/manjaro-arm/applications/arm-profiles.git
+      - uses: Tiryoh/gha-jobid-action@v1.2.0
+        id: url
+        if: failure()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          job_name: 'arm ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.device }}'
+      - uses: s3krit/matrix-message-action@v0.0.3
+        if: failure()
+        with:
+          room_id: ${{ env.MATRIX_ROOM_ID}}
+          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
+          message: "Error building for **ARM**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.device }}**](${{ steps.url.outputs.html_url }})."
+          server: "matrix.org"
+  build-iso:
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: write
+    needs: [prepare-release]
+    continue-on-error: ${{ matrix.experimental }}
+    name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }} ${{ matrix.kernel }}
+    strategy:
+      matrix:
+        edition: [kde, kde-dev, xfce, gnome, gnome-next, i3, cinnamon]
+        branch: [stable, testing, unstable]
+        scope: [full]
+        exclude:
+          - edition: kde
+            branch: unstable
+          - edition: kde-dev
+            branch: stable
+          - edition: kde-dev
+            branch: testing
+          - edition: gnome
+            branch: unstable
+          - edition: gnome-next
+            branch: stable
+          - edition: gnome-next
+            branch: testing
+        include:    
+          # we assume all builds are experimental (and exclude the ones the _must_ pass)   
+          - experimental: true
+          # we use the longterm kernel by default
+          - kernel: ${{ needs.prepare-release.outputs.longterm }}
+          # all unstable builds are using the latest stable kernel
+          - branch: unstable
+            kernel: ${{ needs.prepare-release.outputs.stable }}
+          # as kde, xfce and gnome are the "official" editions, their builds are not experimental
+          # - edition: kde
+          #   branch: stable
+          #   experimental: false
+          # - edition: xfce
+          #   branch: stable
+          #   experimental: false
+          # - edition: gnome
+          #   branch: stable
+          #   experimental: false
+    steps:
+      - name: x86_64 build
+        uses: manjaro/manjaro-iso-action@main
+        with:
+          iso-profiles-repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
+          edition: ${{ matrix.edition }}
+          branch: ${{ matrix.branch }}
+          scope: ${{ matrix.scope }}
+          kernel: ${{ matrix.kernel }}
+          release-tag: ${{ needs.prepare-release.outputs.release_tag }}
+      - uses: Tiryoh/gha-jobid-action@v1.2.0
+        id: url
+        if: failure()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          job_name: 'x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }} ${{ matrix.kernel }}'
+      - uses: s3krit/matrix-message-action@v0.0.3
+        if: failure()
+        with:
+          room_id: ${{ env.MATRIX_ROOM_ID}}
+          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
+          message: "Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }})."
+          server: "matrix.org"
+  rollback:
+    runs-on: ubuntu-22.04
+    needs: [build-iso, build-image, prepare-release]
+    if: ${{ failure() || cancelled() }}
+    steps:
+      - name: rollback
+        run: |
+          echo ${{ github.token }} | gh auth login --with-token
+          ASSET_COUNT=$(gh release view ${{ needs.prepare-release.outputs.release_tag }} --json "assets" --jq '.assets | length')
+          if [ "$ASSET_COUNT" -gt "2" ]; then exit 0;fi
+          gh release delete ${{ needs.prepare-release.outputs.release_tag }} -y --repo ${{ github.repository }}
+          git push --delete origin ${{ needs.prepare-release.outputs.release_tag }}
