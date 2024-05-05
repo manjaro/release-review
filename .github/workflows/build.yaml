@@ -29,45 +29,6 @@ jobs:
       release_tag: ${{ steps.time.outputs.time }}
       longterm: ${{ steps.receive.outputs.longterm-pkg }}
       stable: ${{ steps.receive.outputs.stable-pkg }}
-  build-image:
-    runs-on: ubuntu-22.04
-    permissions:
-      actions: read
-      contents: write
-    needs: [prepare-release]
-    # we need to continue on error for the experimental builds
-    continue-on-error: ${{ matrix.experimental }}
-    name: arm ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.device }}
-    strategy:
-      matrix:
-        edition: [minimal, xfce, gnome, kde-plasma, i3, mate]
-        branch: [stable, testing, unstable]
-        device: [rpi4]
-        include:
-          # we assume all builds are experimental, as arm is in a rough shape overall
-          - experimental: true
-    steps:
-      - name: arm build
-        uses: manjaro-contrib/action-buildarmimg@main
-        with:
-          device: ${{ matrix.device }}
-          edition: ${{ matrix.edition }}
-          branch: ${{ matrix.branch }}
-          release-tag: ${{ needs.prepare-release.outputs.release_tag }}
-          arm-profiles-repo: https://gitlab.manjaro.org/manjaro-arm/applications/arm-profiles.git
-      - uses: Tiryoh/gha-jobid-action@v1.2.0
-        id: url
-        if: failure()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          job_name: 'arm ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.device }}'
-      - uses: s3krit/matrix-message-action@v0.0.3
-        if: failure()
-        with:
-          room_id: ${{ env.MATRIX_ROOM_ID}}
-          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "Error building for **ARM**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.device }}**](${{ steps.url.outputs.html_url }})."
-          server: "matrix.org"
   build-iso:
     runs-on: ubuntu-22.04
     permissions:
