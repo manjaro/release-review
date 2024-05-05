@@ -98,7 +98,7 @@ jobs:
           server: "matrix.org"
   rollback:
     runs-on: ubuntu-22.04
-    needs: [build-iso, build-image, prepare-release]
+    needs: [build-iso, prepare-release]
     if: ${{ failure() || cancelled() }}
     steps:
       - name: rollback
