@@ -90,7 +90,7 @@ jobs:
         with:
           room_id: ${{ env.MATRIX_ROOM_ID}}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }})."
+          message: ":warning: Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }})."
           server: "matrix.org"
   rollback:
     runs-on: ubuntu-22.04
@@ -104,3 +104,10 @@ jobs:
           if [ "$ASSET_COUNT" -gt "2" ]; then exit 0;fi
           gh release delete ${{ needs.prepare-release.outputs.release_tag }} -y --repo ${{ github.repository }}
           git push --delete origin ${{ needs.prepare-release.outputs.release_tag }}
+      - uses: s3krit/matrix-message-action@v0.0.3
+        if: failure()
+        with:
+          room_id: ${{ env.MATRIX_ROOM_ID}}
+          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
+          message: ":grimacing: Error building for **x86**: One or more **official** builds failed. Please have a log into the [logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          server: "matrix.org"
