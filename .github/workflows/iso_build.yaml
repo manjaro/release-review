@@ -92,6 +92,17 @@ jobs:
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
           message: "⚠️ Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }})."
           server: "matrix.org"
+  announce:
+    runs-on: ubuntu-22.04
+    needs: [prepare-release, build-iso]
+    if: ${{ success() && failure() == false }}
+    steps:
+      - uses: s3krit/matrix-message-action@v0.0.3
+        with:
+          room_id: ${{ env.MATRIX_ROOM_ID}}
+          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
+          message: "🚀 Success building for **x86**: Should we do a release? Check out [those](https://github.com/${{ github.repository }}/releases/tag/${{ needs.prepare-release.outputs.release_tag }}) assets!"
+          server: "matrix.org"
   rollback:
     runs-on: ubuntu-22.04
     needs: [build-iso, prepare-release]
