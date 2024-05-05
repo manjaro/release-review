@@ -40,11 +40,11 @@ jobs:
     name: arm ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.device }}
     strategy:
       matrix:
-        edition: [minimal, xfce, gnome, kde-plasma]
+        edition: [minimal, xfce, gnome, kde-plasma, i3, mate]
         branch: [stable, testing, unstable]
         device: [rpi4]
         include:
-          # we assume all builds are experimental, as arm is in a bad shape overall
+          # we assume all builds are experimental, as arm is in a rough shape overall
           - experimental: true
     steps:
       - name: arm build
