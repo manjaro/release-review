@@ -4,3 +4,4 @@ pkg-cache
 iso-profiles
 iso
 node_modules
+.wrangler
