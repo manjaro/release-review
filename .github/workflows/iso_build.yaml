@@ -90,7 +90,7 @@ jobs:
         with:
           room_id: ${{ env.MATRIX_ROOM_ID}}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: ":warning: Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }})."
+          message: "⚠️ Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }})."
           server: "matrix.org"
   rollback:
     runs-on: ubuntu-22.04
@@ -110,5 +110,5 @@ jobs:
         with:
           room_id: ${{ env.MATRIX_ROOM_ID}}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: ":grimacing: Error building for **x86**: One or more **official** builds failed. Please have a log into the [logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          message: "😬 Error building for **x86**: One or more **official** builds failed. Please have a look into the [logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           server: "matrix.org"
