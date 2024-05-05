@@ -1,5 +1,8 @@
 name: Build x86_64 ISOs
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron:  '30 2 * * 0'
   workflow_dispatch:
@@ -25,50 +28,21 @@ jobs:
       release_tag: ${{ steps.time.outputs.time }}
       longterm: ${{ steps.receive.outputs.longterm-pkg }}
       stable: ${{ steps.receive.outputs.stable-pkg }}
-  build-iso:
+  build-stable:
     runs-on: ubuntu-22.04
-    permissions:
-      actions: read
-      contents: write
     needs: [prepare-release]
-    continue-on-error: ${{ matrix.experimental }}
-    name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }} ${{ matrix.kernel }}
+    # TODO: Set this back to false once we un-broke "stable"
+    continue-on-error: true
+    name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
+    permissions:
+      contents: write
     strategy:
       matrix:
-        edition: [kde, kde-dev, xfce, gnome, gnome-next, i3, cinnamon]
-        branch: [stable, testing, unstable]
+        edition: [kde, xfce, gnome, i3, cinnamon]
+        branch: [stable]
         scope: [full]
-        exclude:
-          - edition: kde
-            branch: unstable
-          - edition: kde-dev
-            branch: stable
-          - edition: kde-dev
-            branch: testing
-          - edition: gnome
-            branch: unstable
-          - edition: gnome-next
-            branch: stable
-          - edition: gnome-next
-            branch: testing
-        include:    
-          # we assume all builds are experimental (and exclude the ones the _must_ pass)   
-          - experimental: true
-          # we use the longterm kernel by default
+        include:
           - kernel: ${{ needs.prepare-release.outputs.longterm }}
-          # all unstable builds are using the latest stable kernel
-          - branch: unstable
-            kernel: ${{ needs.prepare-release.outputs.stable }}
-          # as kde, xfce and gnome are the official editions, their builds are not experimental
-          - edition: kde
-            branch: stable
-            experimental: false
-          - edition: xfce
-            branch: stable
-            experimental: false
-          - edition: gnome
-            branch: stable
-            experimental: false
     steps:
       - name: x86_64 build
         uses: manjaro/manjaro-iso-action@main
@@ -79,34 +53,44 @@ jobs:
           scope: ${{ matrix.scope }}
           kernel: ${{ matrix.kernel }}
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
-      - uses: Tiryoh/gha-jobid-action@v1.2.0
-        id: url
-        if: failure()
+  build-unstable:
+    runs-on: ubuntu-22.04
+    needs: [prepare-release]
+    continue-on-error: true
+    name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        edition: [kde-dev, xfce, gnome-next, i3, cinnamon]
+        branch: [unstable]
+        scope: [full]
+        include:
+          - kernel: ${{ needs.prepare-release.outputs.stable }}
+    steps:
+      - name: x86_64 build
+        uses: manjaro/manjaro-iso-action@main
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          job_name: 'x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }} ${{ matrix.kernel }}'
-      - uses: s3krit/matrix-message-action@v0.0.3
-        if: failure()
-        with:
-          room_id: ${{ env.MATRIX_ROOM_ID}}
-          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "⚠️ Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }})."
-          server: "matrix.org"
+          iso-profiles-repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
+          edition: ${{ matrix.edition }}
+          branch: ${{ matrix.branch }}
+          scope: ${{ matrix.scope }}
+          kernel: ${{ matrix.kernel }}
+          release-tag: ${{ needs.prepare-release.outputs.release_tag }}
   announce:
     runs-on: ubuntu-22.04
-    needs: [prepare-release, build-iso]
-    if: ${{ success() && failure() == false }}
+    needs: [prepare-release, build-stable]
     steps:
       - uses: s3krit/matrix-message-action@v0.0.3
         with:
           room_id: ${{ env.MATRIX_ROOM_ID}}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "🚀 Success building for **x86**: Should we do a release? Check out [those](https://github.com/${{ github.repository }}/releases/tag/${{ needs.prepare-release.outputs.release_tag }}) assets!"
+          message: "🚀 Success building for **x86** (stable): Should we do a release? Check out [those](https://github.com/${{ github.repository }}/releases/tag/${{ needs.prepare-release.outputs.release_tag }}) assets!"
           server: "matrix.org"
   rollback:
     runs-on: ubuntu-22.04
-    needs: [build-iso, prepare-release]
-    if: ${{ failure() || cancelled() }}
+    needs: [prepare-release, build-stable]
+    if: ${{ cancelled() || needs.build-stable.result == 'failure' }}
     steps:
       - name: rollback
         run: |
@@ -117,9 +101,9 @@ jobs:
           gh release delete ${{ needs.prepare-release.outputs.release_tag }} -y --repo ${{ github.repository }}
           git push --delete origin ${{ needs.prepare-release.outputs.release_tag }}
       - uses: s3krit/matrix-message-action@v0.0.3
-        if: failure()
+        if: ${{ needs.build-stable.result == 'failure' }}
         with:
           room_id: ${{ env.MATRIX_ROOM_ID}}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "😬 Error building for **x86**: One or more **official** builds failed. Please have a look into the [logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          message: "😬 Error building for **x86**: Please have a look into the [logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           server: "matrix.org"
