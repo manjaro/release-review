@@ -59,16 +59,16 @@ jobs:
           # all unstable builds are using the latest stable kernel
           - branch: unstable
             kernel: ${{ needs.prepare-release.outputs.stable }}
-          # as kde, xfce and gnome are the "official" editions, their builds are not experimental
-          # - edition: kde
-          #   branch: stable
-          #   experimental: false
-          # - edition: xfce
-          #   branch: stable
-          #   experimental: false
-          # - edition: gnome
-          #   branch: stable
-          #   experimental: false
+          # as kde, xfce and gnome are the official editions, their builds are not experimental
+          - edition: kde
+            branch: stable
+            experimental: false
+          - edition: xfce
+            branch: stable
+            experimental: false
+          - edition: gnome
+            branch: stable
+            experimental: false
     steps:
       - name: x86_64 build
         uses: manjaro/manjaro-iso-action@main
