@@ -44,15 +44,15 @@ jobs:
             branch: stable
             scope: full
           - edition: kde
-            mention: "@boredland:matrix.org"
+            mention: "?"
           - edition: xfce
-            mention: "@boredland:matrix.org"
+            mention: "?"
           - edition: gnome
-            mention: "@boredland:matrix.org"
+            mention: "@yochananmarqos:matrix.org"
           - edition: i3
-            mention: "@oberon-manjaro:matrix.org and @boredland:matrix.org"
+            mention: "@oberon-manjaro:matrix.org"
           - edition: cinnamon
-            mention: "@oberon-manjaro:matrix.org and @boredland:matrix.org"
+            mention: "@oberon-manjaro:matrix.org"
     steps:
       - name: x86_64 build
         uses: manjaro/manjaro-iso-action@main
