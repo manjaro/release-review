@@ -31,11 +31,11 @@ jobs:
   build-stable:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
-    continue-on-error: false
     name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
     permissions:
       contents: write
     strategy:
+      fail-fast: false
       matrix:
         edition: [kde, xfce, gnome, i3, cinnamon]
         branch: [stable]
@@ -55,11 +55,11 @@ jobs:
   build-unstable:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
-    continue-on-error: true
     name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
     permissions:
       contents: write
     strategy:
+      fail-fast: false
       matrix:
         edition: [kde-dev, xfce, gnome-next, i3, cinnamon]
         branch: [unstable]
