@@ -89,7 +89,7 @@ jobs:
           server: "matrix.org"
   rollback:
     runs-on: ubuntu-22.04
-    needs: [prepare-release, build-stable]
+    needs: [prepare-release, build-stable, build-unstable]
     if: cancelled() || failure()
     steps:
       - name: rollback
