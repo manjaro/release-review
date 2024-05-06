@@ -31,17 +31,28 @@ jobs:
   build-stable:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
-    name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
+    name: stable x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
     permissions:
       contents: write
+      actions: read
     strategy:
       fail-fast: false
       matrix:
         edition: [kde, xfce, gnome, i3, cinnamon]
-        branch: [stable]
-        scope: [full]
         include:
           - kernel: ${{ needs.prepare-release.outputs.longterm }}
+            branch: stable
+            scope: full
+          - edition: kde
+            mention: "@boredland:matrix.org"
+          - edition: xfce
+            mention: "@boredland:matrix.org"
+          - edition: gnome
+            mention: "@boredland:matrix.org"
+          - edition: i3
+            mention: "@oberon-manjaro:matrix.org and @boredland:matrix.org"
+          - edition: cinnamon
+            mention: "@oberon-manjaro:matrix.org and @boredland:matrix.org"
     steps:
       - name: x86_64 build
         uses: manjaro/manjaro-iso-action@main
@@ -52,20 +63,33 @@ jobs:
           scope: ${{ matrix.scope }}
           kernel: ${{ matrix.kernel }}
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
+      - uses: Tiryoh/gha-jobid-action@v1.2.0
+        id: url
+        if: failure()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          job_name: 'stable x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}'
+      - uses: s3krit/matrix-message-action@v0.0.3
+        if: failure()
+        with:
+          room_id: ${{ env.MATRIX_ROOM_ID}}
+          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
+          message: "⚠️ Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }}). Summon ${{ matrix.mention }} 🪄!"
+          server: "matrix.org"
   build-unstable:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
-    name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
+    name: unstable x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
     permissions:
       contents: write
     strategy:
       fail-fast: false
       matrix:
         edition: [kde-dev, xfce, gnome-next, i3, cinnamon]
-        branch: [unstable]
-        scope: [full]
         include:
           - kernel: ${{ needs.prepare-release.outputs.stable }}
+            branch: unstable
+            scope: full
     steps:
       - name: x86_64 build
         uses: manjaro/manjaro-iso-action@main
