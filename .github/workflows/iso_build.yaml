@@ -123,7 +123,6 @@ jobs:
           # If we have more than the two tarballs github creates, we can delete the release - there is nothing to inspect
           if [ "$ASSET_COUNT" -gt "2" ]; then exit 0;fi
           gh release delete ${{ needs.prepare-release.outputs.release_tag }} -y --repo ${{ github.repository }}
-          git push --delete origin ${{ needs.prepare-release.outputs.release_tag }}
       - uses: s3krit/matrix-message-action@v0.0.3
         if: ${{ needs.build-stable.result == 'failure' }}
         with:
