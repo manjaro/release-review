@@ -13,6 +13,7 @@ concurrency:
 
 env:
   MATRIX_ROOM_ID: "!XXstZzLEcUVKyTcqCA:matrix.org"
+  MIRROR: https://opencolo.mm.fcix.net/manjaro
 
 jobs:
   prepare-release:
@@ -22,16 +23,16 @@ jobs:
         uses: boredland/get-time-action@dbc808befb89eb33fee64f5f4abce4d2a5fa7cfd # tag=2.0.0
         with:
           format: 'YYYYMMDDHHmm'
-      - id: receive
+      - id: kernel
         uses: boredland/kernel-info@main
     outputs:
       release_tag: ${{ steps.time.outputs.time }}
-      longterm: ${{ steps.receive.outputs.longterm-pkg }}
-      stable: ${{ steps.receive.outputs.stable-pkg }}
+      longterm: ${{ steps.kernel.outputs.longterm-pkg }}
+      stable: ${{ steps.kernel.outputs.stable-pkg }}
   build-stable:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
-    name: stable x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
+    name: stable x86_64 ${{ matrix.edition }}
     permissions:
       contents: write
       actions: read
@@ -40,9 +41,6 @@ jobs:
       matrix:
         edition: [kde, xfce, gnome, i3, cinnamon]
         include:
-          - kernel: ${{ needs.prepare-release.outputs.longterm }}
-            branch: stable
-            scope: full
           - edition: kde
             mention: "?"
           - edition: xfce
@@ -59,47 +57,45 @@ jobs:
         with:
           iso-profiles-repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
           edition: ${{ matrix.edition }}
-          branch: ${{ matrix.branch }}
-          scope: ${{ matrix.scope }}
-          kernel: ${{ matrix.kernel }}
+          branch: stable
+          scope: full
+          kernel: ${{ needs.prepare-release.outputs.longterm }}
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
+          build-mirror: ${{ env.MIRROR }}
       - uses: Tiryoh/gha-jobid-action@v1.2.0
         id: url
         if: failure()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          job_name: 'stable x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}'
+          job_name: 'stable x86_64 ${{ matrix.edition }}'
       - uses: s3krit/matrix-message-action@v0.0.3
         if: failure()
         with:
           room_id: ${{ env.MATRIX_ROOM_ID}}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "⚠️ Error building for **x86**: [**${{ matrix.edition }}** - **${{ matrix.branch }}** - **${{ matrix.kernel }}**](${{ steps.url.outputs.html_url }}). Summon ${{ matrix.mention }} 🪄!"
+          message: "⚠️ Error building **${{ matrix.edition }}** for **x86** (**stable**). Summon ${{ matrix.mention }} to check the [logs](${{ steps.url.outputs.html_url }}) 🪄!"
           server: "matrix.org"
   build-unstable:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
-    name: unstable x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
+    name: unstable x86_64 ${{ matrix.edition }}
     permissions:
       contents: write
     strategy:
       fail-fast: false
       matrix:
         edition: [kde-dev, xfce, gnome-next, i3, cinnamon]
-        include:
-          - kernel: ${{ needs.prepare-release.outputs.stable }}
-            branch: unstable
-            scope: full
     steps:
       - name: x86_64 build
         uses: manjaro/manjaro-iso-action@main
         with:
           iso-profiles-repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
           edition: ${{ matrix.edition }}
-          branch: ${{ matrix.branch }}
-          scope: ${{ matrix.scope }}
-          kernel: ${{ matrix.kernel }}
+          branch: unstable
+          scope: full
+          kernel: ${{ needs.prepare-release.outputs.stable }}
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
+          build-mirror: ${{ env.MIRROR}}
   announce:
     runs-on: ubuntu-22.04
     needs: [prepare-release, build-stable]
