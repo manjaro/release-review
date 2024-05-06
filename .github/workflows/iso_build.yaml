@@ -31,8 +31,7 @@ jobs:
   build-stable:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
-    # TODO: Set this back to false once we un-broke "stable"
-    continue-on-error: true
+    continue-on-error: false
     name: x86_64 ${{ matrix.edition }} ${{ matrix.branch }} ${{ matrix.scope }}
     permissions:
       contents: write
@@ -77,20 +76,10 @@ jobs:
           scope: ${{ matrix.scope }}
           kernel: ${{ matrix.kernel }}
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
-  announce:
-    runs-on: ubuntu-22.04
-    needs: [prepare-release, build-stable]
-    steps:
-      - uses: s3krit/matrix-message-action@v0.0.3
-        with:
-          room_id: ${{ env.MATRIX_ROOM_ID}}
-          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "🚀 Success building for **x86** (stable): Should we do a release? Check out [those](https://github.com/${{ github.repository }}/releases/tag/${{ needs.prepare-release.outputs.release_tag }}) assets!"
-          server: "matrix.org"
   rollback:
     runs-on: ubuntu-22.04
     needs: [prepare-release, build-stable]
-    if: ${{ cancelled() || needs.build-stable.result == 'failure' }}
+    if: cancelled() || failure()
     steps:
       - name: rollback
         run: |
