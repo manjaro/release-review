@@ -74,6 +74,8 @@ jobs:
           kernel: ${{ needs.prepare-release.outputs.longterm }}
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
           build-mirror: ${{ env.MIRROR }}
+          gpg-secret-key-base64: ${{ secrets.CI_PRIV_KEY }}
+          gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
       - uses: Tiryoh/gha-jobid-action@v1.2.0
         id: url
         if: failure()
@@ -118,6 +120,8 @@ jobs:
           kernel: ${{ needs.prepare-release.outputs.stable }}
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
           build-mirror: ${{ env.MIRROR}}
+          gpg-secret-key-base64: ${{ secrets.CI_PRIV_KEY }}
+          gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
   announce:
     runs-on: ubuntu-22.04
     needs: [prepare-release, build-stable]
