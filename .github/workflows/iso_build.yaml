@@ -39,8 +39,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        edition: [kde, xfce, gnome, i3, cinnamon]
+        edition: [kde, xfce, gnome, i3, cinnamon, sway]
         include:
+          - repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
           - edition: kde
             mention: "?"
           - edition: xfce
@@ -51,11 +52,14 @@ jobs:
             mention: "@oberon-manjaro:matrix.org"
           - edition: cinnamon
             mention: "@oberon-manjaro:matrix.org"
+          - edition: sway
+            mention: "@boredland:matrix.org"
+            repo: https://github.com/manjaro-sway/iso-profiles
     steps:
       - name: x86_64 build
         uses: manjaro/manjaro-iso-action@main
         with:
-          iso-profiles-repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
+          iso-profiles-repo: ${{ matrix.repo }}
           edition: ${{ matrix.edition }}
           branch: stable
           scope: full
@@ -84,12 +88,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        edition: [kde-dev, xfce, gnome-next, i3, cinnamon]
+        edition: [kde-dev, xfce, gnome-next, i3, cinnamon, sway]
+        include:
+          - repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
+          - edition: sway
+            repo: https://github.com/manjaro-sway/iso-profiles
     steps:
       - name: x86_64 build
         uses: manjaro/manjaro-iso-action@main
         with:
-          iso-profiles-repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
+          iso-profiles-repo: ${{ matrix.repo }}
           edition: ${{ matrix.edition }}
           branch: unstable
           scope: full
