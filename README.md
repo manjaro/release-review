@@ -10,6 +10,14 @@ Review-Images of Manjaro Linux
 
 Images are built and uploaded in a relatively regular interval to [github releases](https://github.com/manjaro/release-review/releases)
 
+### How to join the multipart zip?
+
+To extract the regular images from multipart zip archive, download both the `z01` and the `zip` files, and run the command:
+
+```sh
+zip -FF manjaro-*.zip --out manjaro-full.zip && unzip manjaro-full.zip
+```
+
 ## Sources
 
 - [iso profiles](https://gitlab.manjaro.org/profiles-and-settings/iso-profiles)
