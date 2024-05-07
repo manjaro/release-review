@@ -79,7 +79,7 @@ jobs:
         with:
           room_id: ${{ env.MATRIX_ROOM_ID}}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "⚠️ Error building **${{ matrix.edition }}** for **x86** (**stable**). Summon ${{ matrix.mention }} to check the [logs](${{ steps.url.outputs.html_url }}) 🪄!"
+          message: "🚨 Error building **${{ matrix.edition }}** for **x86** (**stable**). Summon ${{ matrix.mention }} to check the [logs](${{ steps.url.outputs.html_url }}) 🪄"
           server: "matrix.org"
   build-unstable:
     runs-on: ubuntu-22.04
