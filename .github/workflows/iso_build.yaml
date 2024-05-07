@@ -92,7 +92,7 @@ jobs:
   build-next:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
-    name: unstable x86_64 ${{ matrix.edition }}
+    name: ${{ matrix.branch }} x86_64 ${{ matrix.edition }}
     permissions:
       contents: write
     strategy:
