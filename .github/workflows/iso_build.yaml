@@ -65,7 +65,7 @@ jobs:
             repo: https://github.com/manjaro-sway/iso-profiles
     steps:
       - name: x86_64 build
-        uses: manjaro/manjaro-iso-action@main
+        uses: manjaro-contrib/action-buildiso@main
         with:
           iso-profiles-repo: ${{ matrix.repo }}
           edition: ${{ matrix.edition }}
@@ -112,7 +112,7 @@ jobs:
             repo: https://github.com/manjaro-sway/iso-profiles
     steps:
       - name: x86_64 build
-        uses: manjaro/manjaro-iso-action@main
+        uses: manjaro-contrib/action-buildiso@main
         with:
           iso-profiles-repo: ${{ matrix.repo }}
           edition: ${{ matrix.edition }}
