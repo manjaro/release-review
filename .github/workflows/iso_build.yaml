@@ -89,7 +89,7 @@ jobs:
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
           message: "🚨 Error building **${{ matrix.edition }}** for **x86** (**stable**). Summon ${{ matrix.mention }} to check the [logs](${{ steps.url.outputs.html_url }}) 🪄"
           server: "matrix.org"
-  build-unstable:
+  build-next:
     runs-on: ubuntu-22.04
     needs: [prepare-release]
     name: unstable x86_64 ${{ matrix.edition }}
@@ -98,6 +98,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        branch: [unstable, testing]
         edition:
           - kde-dev
           - xfce
@@ -115,7 +116,7 @@ jobs:
         with:
           iso-profiles-repo: ${{ matrix.repo }}
           edition: ${{ matrix.edition }}
-          branch: unstable
+          branch: ${{ matrix.branch }}
           scope: full
           kernel: ${{ needs.prepare-release.outputs.stable }}
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
@@ -135,7 +136,7 @@ jobs:
           server: "matrix.org"
   rollback:
     runs-on: ubuntu-22.04
-    needs: [prepare-release, build-stable, build-unstable]
+    needs: [prepare-release, build-stable, build-next]
     if: cancelled() || failure()
     steps:
       - uses: actions/checkout@v4
