@@ -45,9 +45,9 @@ jobs:
         include:
           - repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
           - edition: kde
-            mention: "?"
+            mention: "@lordtermor:matrix.org"
           - edition: xfce
-            mention: "?"
+            mention: "@daphilly:matrix.org"
           - edition: gnome
             mention: "@yochananmarqos:matrix.org"
           - edition: i3
