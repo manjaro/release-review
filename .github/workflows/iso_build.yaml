@@ -41,7 +41,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        edition: [kde, xfce, gnome, i3, cinnamon, sway]
+        edition: 
+          - kde
+          - xfce
+          - gnome
+          - i3
+          - cinnamon
+          - sway
         include:
           - repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
           - edition: kde
@@ -90,7 +96,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        edition: [kde-dev, xfce, gnome-next, i3, cinnamon, sway]
+        edition:
+          - kde-dev
+          - xfce
+          - gnome-next
+          - i3
+          - cinnamon
+          - sway
         include:
           - repo: https://gitlab.manjaro.org/profiles-and-settings/iso-profiles.git
           - edition: sway
