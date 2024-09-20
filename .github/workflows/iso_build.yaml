@@ -25,7 +25,7 @@ jobs:
         ##### EDIT ME #####
         EDITION: [gnome, xfce, kde]
 #        EDITION: [kde]
-        BRANCH: [stable]
+        BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
     steps:
@@ -38,9 +38,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "23.1"
-          kernel: linux66
-          code-name: "Vulcan"
+          version: "24.1"
+          kernel: linux611
+          code-name: "Xahea"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
