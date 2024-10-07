@@ -39,7 +39,7 @@ jobs:
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
           version: "24.1"
-          kernel: linux611
+          kernel: linux610
           code-name: "Xahea"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
