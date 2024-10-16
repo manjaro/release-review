@@ -39,7 +39,7 @@ jobs:
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
           version: "24.2"
-          kernel: linux612
+          kernel: linux611
           code-name: "Yonada"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
