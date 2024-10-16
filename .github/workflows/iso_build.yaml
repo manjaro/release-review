@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
-        EDITION: [gnome, xfce, kde]
+        EDITION: [gnome-next, xfce, kde]
 #        EDITION: [kde]
         BRANCH: [testing]
         SCOPE: [minimal,full]
