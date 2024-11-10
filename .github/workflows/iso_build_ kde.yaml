@@ -6,7 +6,7 @@ on:
 
 jobs:
   prepare-release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: styfle/cancel-workflow-action@01ce38bf961b4e243a6342cbade0dbc8ba3f0432 # 0.12.0
         with:
@@ -18,7 +18,7 @@ jobs:
     outputs:
       release_tag: ${{ steps.time.outputs.time }}      
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: prepare-release    
     strategy:
       matrix:
