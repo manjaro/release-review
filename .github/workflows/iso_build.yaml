@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
+        KERNEL: [linux611, linux612]
         EDITION: [gnome, xfce, kde]
-#        EDITION: [kde]
         BRANCH: [stable]
         SCOPE: [minimal,full]
         ###################
@@ -39,7 +39,7 @@ jobs:
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
           version: "24.2"
-          kernel: linux612
+          kernel: ${{ matrix.kernel }}
           code-name: "Yonada"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
