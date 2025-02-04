@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
-        KERNEL: [linux611, linux612]
+        KERNEL: [linux612]
         EDITION: [gnome, xfce, kde]
         BRANCH: [stable]
         SCOPE: [minimal,full]
