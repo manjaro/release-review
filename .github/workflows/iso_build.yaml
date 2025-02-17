@@ -18,7 +18,7 @@ jobs:
     outputs:
       release_tag: ${{ steps.time.outputs.time }}      
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: prepare-release    
     strategy:
       matrix:
@@ -38,9 +38,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "24.2"
+          version: "25.0"
           kernel: ${{ matrix.kernel }}
-          code-name: "Yonada"
+          code-name: "Zetar"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
