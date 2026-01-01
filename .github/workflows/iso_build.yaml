@@ -37,7 +37,7 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "25.1"
+          version: "26.0"
           kernel: linux618
           code-name: "Anh-Linh"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
