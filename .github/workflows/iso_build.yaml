@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
-        KERNEL: [linux612]
+        KERNEL: [linux618]
         EDITION: [gnome, xfce, kde]
         BRANCH: [stable]
         SCOPE: [minimal,full]
@@ -38,9 +38,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "25.0"
+          version: "26.0"
           kernel: ${{ matrix.kernel }}
-          code-name: "Zetar"
+          code-name: "Anh-Linh"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
