@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
-        KERNEL: [linux70, linux618]
-        EDITION: [generic-oem-gnome, gnome, xfce, kde]
+        KERNEL: [linux70]
+        EDITION: [generic-oem-kde]
         BRANCH: [stable]
         SCOPE: [minimal,full]
         ###################
