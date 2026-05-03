@@ -2,7 +2,7 @@ name: iso_build
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 2 1 * *'
+    - cron:  '30 6 1 * *'
 
 jobs:
   prepare-release:
@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
-        KERNEL: [linux618]
-        EDITION: [gnome, xfce, kde]
+        KERNEL: [linux70, linux618]
+        EDITION: [generic-oem-gnome, gnome, xfce, kde]
         BRANCH: [stable]
         SCOPE: [minimal,full]
         ###################
@@ -38,9 +38,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "26.0"
+          version: "26.1-pre1"
           kernel: ${{ matrix.kernel }}
-          code-name: "Anh-Linh"
+          code-name: "Bian-May"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
