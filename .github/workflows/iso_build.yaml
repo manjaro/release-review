@@ -23,7 +23,8 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
-        EDITION: [generic-oem-gnome, gnome-next, xfce, kde]
+        EDITION: [gnome, xfce, kde]
+        KERNEL: [linux70, linux618]
         BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
@@ -38,7 +39,7 @@ jobs:
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
           version: "26.1"
-          kernel: linux70
+          kernel: ${{ matrix.kernel }}
           code-name: "Bian-May"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
