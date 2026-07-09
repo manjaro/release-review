@@ -41,6 +41,7 @@ jobs:
           version: "26.1"
           kernel: ${{ matrix.kernel }}
           code-name: "Bian-May"
+          build-mirror: "https://mirrors.manjaro.org/repo"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
