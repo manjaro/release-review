@@ -16,14 +16,14 @@ jobs:
         with:
           format: 'YYYYMMDDHHmm'
     outputs:
-      release_tag: ${{ steps.time.outputs.time }}      
+      release_tag: ${{ steps.time.outputs.time }}
   release:
     runs-on: ubuntu-24.04
-    needs: prepare-release    
+    needs: prepare-release
     strategy:
       matrix:
         ##### EDIT ME #####
-        KERNEL: [linux71, linux618]
+        KERNEL: [linux72, linux618]
         EDITION: [generic-oem-gnome, gnome, xfce, kde, generic-oem-kde]
         BRANCH: [stable]
         SCOPE: [minimal,full]
@@ -38,7 +38,7 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "26.1-pre1"
+          version: "26.1.3"
           kernel: ${{ matrix.kernel }}
           code-name: "Bian-May"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
