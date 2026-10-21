@@ -24,8 +24,8 @@ jobs:
       matrix:
         ##### EDIT ME #####
         KERNEL: [linux72, linux618]
-        EDITION: [generic-oem-gnome, gnome, xfce, kde, generic-oem-kde]
-        BRANCH: [stable]
+        EDITION: [gnome, xfce, kde]
+        BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
     steps:
