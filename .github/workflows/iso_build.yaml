@@ -24,7 +24,7 @@ jobs:
       matrix:
         ##### EDIT ME #####
         KERNEL: [linux72, linux618]
-        EDITION: [gnome, xfce, kde]
+        EDITION: [gnome, xfce, kde-next]
         BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
@@ -38,9 +38,9 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "26.1.3"
+          version: "27.0"
           kernel: ${{ matrix.kernel }}
-          code-name: "Bian-May"
+          code-name: "Caldonia"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
       - name: rollback
         if: ${{ failure() || cancelled() }}
