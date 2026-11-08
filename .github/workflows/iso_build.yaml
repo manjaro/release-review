@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         ##### EDIT ME #####
-        KERNEL: [linux72, linux618]
-        EDITION: [gnome, xfce, kde-next]
+        KERNEL: [linux73, linux618]
+        EDITION: [gnome-next, xfce, kde-next]
         BRANCH: [testing]
         SCOPE: [minimal,full]
         ###################
